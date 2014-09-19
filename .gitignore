@@ -1,17 +1,27 @@
+# buffers, beam files etc
+*~
 *.beam
 .eunit
+
+# directories
 log/
-doc/
+doc/0
 deps/*
-ebin
-data
+ebin/
+data/
 _rel/
-*~
 dev/*
+
+# logs
 erl_crash.dump
 .dialyzer_plt
 .dialyzer.base_plt
+
+# tools
 relx
 rebar
+.rebar/
+
+# notes
 NOTES
 TODO
