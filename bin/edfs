@@ -1,1 +1,85 @@
 #!/usr/bin/env bash
+
+# root directory
+export EDFS_ROOT=${EDFS_ROOT:=$(cd `dirname $0`/..;pwd)}
+
+# path eDFS erlang application binary
+export EDFS=${EDFS:="$EDFS_ROOT/_rel/bin/edfs"}
+
+# path to extended CLI script
+export EDFS_CTL=${EDFS_CTL:="$EDFS_ROOT/bin/edfsctl"}
+
+# command given
+COMMAND=$1
+
+USAGE=$( cat << EOF
+## edfs core
+stop
+restart
+foreground
+start_boot           <file>
+start
+reboot
+console
+upgrade
+console_clean
+ping
+remote_console
+console_boot         <file>
+attach
+
+## cluster
+join_cluster         <clusternode>
+sync_nodes
+cancel_sync
+cluster_status
+
+## user
+change_password      <username> <newpassword>
+add_user             <username> <password>
+list_users
+delete_user          <username>
+
+## plugins
+list_plugins
+disable_plugin       <plugin_name>
+enable_plugin        <plugin_name>
+
+EOF
+)
+
+function print_usage () {
+    echo USAGE: `basename $0` [command] 1>&2
+    echo Where command is one of: 1>&2
+
+    echo ""
+    echo -e "$USAGE"
+}
+
+
+# match command
+case $COMMAND in
+    # eDFS core command-line interface
+    start | stop | restart | reboot | ping | console | attach | upgrade | \
+    console_clean | console_boot | remote_console | start_boot | foreground )
+        $EDFS ${@:1} ;;
+    # cluster command-line interface
+    join_cluster | cluster_status | sync_nodes | cancel_sync )
+        $EDFS_CTL cluster ${@:1} ;;
+    # plugins command-line interface
+    list_plugins | enable_plugin | disable_plugin)
+        $EDFS_CTL plugins ${@:1} ;;
+    # user management command-line interface
+    change_password | add_user | delete_user )
+        $EDFS_CTL user ${@:1} ;;
+    help | -h )
+        print_usage
+        exit 0 ;;
+    * )
+        echo "Error: invalid command: " $COMMAND
+        print_usage
+        exit 127 ;;
+esac
+
+# exit
+exit $?
