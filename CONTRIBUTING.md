@@ -20,7 +20,7 @@ documentation and a passing test suite.
 ### Create issues...
 
 Any significant improvement should be documented as [a github
-issue](https://github.com/refuge/coffer/issues) before anybody starts
+issue](https://github.com/edfs/eDFS/issues) before anybody starts
 working on it.
 
 ### ...but check for existing issues first!
