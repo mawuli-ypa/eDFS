@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 19 Sep 2014 by Mawuli Adzaku <mawuli.ypa@gmail.com>
 %%%-------------------------------------------------------------------
--module(edfs_garbage_collector).
+-module(edfs_gc).
 
 -behaviour(gen_server).
 
