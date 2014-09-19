@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# extended command line interface for eDFS
+# clustering: join_cluster, leave_cluster, sync_node, cancel_sync
+# user_management: add_user, change_password, delete_user
+# plugins: list_plugins, enable_plugin, disable_plugin
+
+
+echo -e "#edfs | running ==> " ${@}
