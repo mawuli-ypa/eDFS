@@ -1,10 +1,8 @@
 Welcome to eDFS
 ===============
 
-eDFS is a distributed file system built with Erlang.
-
-The goal of this project is to provide a simple system for managing files and data
-on multiple storage devices without compromising reliability and performance.
+eDFS is a  distrbiuted file system, favoring high availability and partition tolerance, but achieves data consistency through eventual consistency.
+From a practical perspective, eDFS is  a simple system for managing files and data on multiple storage devices without compromising reliability and performance.
 
 
 ## Getting started
