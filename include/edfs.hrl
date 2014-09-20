@@ -23,10 +23,6 @@
 -define(MAXR, 10).
 -define(MAXT, 60).
 
-% other macros
--define(CHILD(I, Type), {I, {I, start_link, []}, permanent, ?SHUTDOWNTIME, Type, [I]}).
--define(CHILD(I, Type, Args), {I, {I, start_link, [Args]}, permanent, ?SHUTDOWNTIME, Type, [I]}).
-
 % processes and gen_server
 -define(EDFS_FILE_SERVER, edfs_file_server).
 -define(EDFS_CHUNK_SERVER, edfs_chunk_server).
@@ -48,6 +44,26 @@
 -define(ERROR(Msg, Args), error_logger:error_msg("~p:~p "++Msg, [?MODULE, ?LINE|Args])).
 
 -define(STACKTRACE, erlang:display(try throw(a) of _ -> a catch _:_ -> erlang:get_stacktrace() end)).
+
+%%% CONFIGURATIONS
+-define(EDFS_SCHEMA_FILE, "edfs.schema").
+-define(EDFS_CONFIG_FILE, "edfs.conf").
+
+-define(EDFS_VMSCHEMA_FILE, "erlang_vm.schema").
+-define(EDFS_VMCONFIG_FILE, "erlang_vm.args").
+
+% other macros
+-define(CHILD(I, Type), {I, {I, start_link, []}, permanent, ?SHUTDOWNTIME, Type, [I]}).
+-define(CHILD(I, Type, Args), {I, {I, start_link, [Args]}, permanent, ?SHUTDOWNTIME, Type, [I]}).
+
+-define(PRIV_DIR,
+    case code:priv_dir(?MODULE) of
+        {error, bad_name} ->
+            Ebin = filename:dirname(code:which(?MODULE)),
+            filename:join(filename:dirname(Ebin), "priv");
+        Dir ->
+            Dir
+    end).
 
 
 %%% DATA TYPES
