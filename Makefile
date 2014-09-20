@@ -44,11 +44,14 @@ deps:
 	@$(REBAR) get-deps
 	$(REBAR) compile
 
+config_gen:
+	$(REBAR) config_gen
+
 update-deps:
 	$(REBAR) update-deps
 	$(RENDER) compile
 
-compile:
+compile: config_gen
 	$(REBAR) skip_deps=true compile
 
 clean:
@@ -89,7 +92,7 @@ define download_relx
 	chmod +x $(RELX)
 endef
 
-rel: clean-rel all $(RELX)
+rel: config_gen  clean-rel all $(RELX)
 	@$(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 $(RELX):
