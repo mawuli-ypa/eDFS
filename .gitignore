@@ -17,6 +17,9 @@ erl_crash.dump
 .dialyzer_plt
 .dialyzer.base_plt
 
+# config files
+priv/*.conf
+
 # tools
 relx
 rebar
@@ -25,3 +28,6 @@ rebar
 # notes
 NOTES
 TODO
+
+# misc
+.erlang-release
