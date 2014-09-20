@@ -1,11 +1,19 @@
 {application, edfs,
  [
-  {description, ""},
-  {vsn, "1"},
-  {registered, []},
+  {description, "Erlang distributed file system"},
+  {vsn, "0.1.0"},
+  {registered, [
+                edfs_file_server
+              , edfs_chunk_server
+              , edfs_log_server
+              , edfs_auth_server]
+  },
   {applications, [
-                  kernel,
-                  stdlib
+                  kernel
+                , stdlib
+                , lager
+                , cuttlefish
+                , ranch
                  ]},
   {mod, { edfs_app, []}},
   {env, []}
