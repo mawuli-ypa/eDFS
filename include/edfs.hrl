@@ -7,6 +7,8 @@
 %%% Created : 18 Sep 2014 by Mawuli Adzaku <mawuli.ypa@gmail.com>
 
 %%% DEFINITIONS
+-define(APP_NAME, edfs).
+
 %% Some standard periods in seconds
 -define(MINUTE,     60).
 -define(HOUR,     3600).
@@ -43,6 +45,9 @@
 -define(LOG(Msg, Args), error_logger:info_msg(Msg, Args)).
 -define(ERROR(Msg, Args), error_logger:error_msg("~p:~p "++Msg, [?MODULE, ?LINE|Args])).
 
+-define(STDOUT(Str, Args), io:format(Str ++ "~n", Args)).
+-define(FORMAT(Str, Args), io_lib:format(Str, Args)).
+
 -define(STACKTRACE, erlang:display(try throw(a) of _ -> a catch _:_ -> erlang:get_stacktrace() end)).
 
 %%% CONFIGURATIONS
@@ -67,6 +72,7 @@
 
 
 %%% DATA TYPES
+-type(proplists() :: [term()]).
 -type uuid()     :: string().
 -type nodeid() :: uuid().
 -type filename() :: file:name().
