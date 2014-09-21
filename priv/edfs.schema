@@ -14,7 +14,19 @@
 %% @doc enable SSL authentication
 {mapping, "security.ssl", "edfs.ssl", [
   {datatype, {enum, [on, off, debug]}},
-  {default, on}
+  {commented, on}
+]}.
+
+%% @doc Default cert location for https can be overridden
+%% with the ssl config variable, for example:
+{mapping, "ssl.certfile", "edfs.ssl.certfile", [
+  {commented, "{{platform_etc_dir}}/cert.pem"}
+]}.
+
+%% @doc Default key location for https can be overridden
+%% with the ssl config variable, for example:
+{mapping, "ssl.keyfile", "edfs.ssl.keyfile", [
+  {commented, "{{platform_etc_dir}}/key.pem"}
 ]}.
 
 %% @doc where do you want the console.log output:
@@ -120,28 +132,6 @@
     end
 }.
 
-%% @doc Path to plugins directory
-{mapping, "plugins_dir", "edfs.plugins_dir", [
-  {default, "$(platform_priv_dir)/plugins"}
-]}.
-
-%% @doc Default location of the system data
-{mapping, "data_dir", "edfs.data_dir", [
-  {default, "$(platform_data_dir)"}
-]}.
-
-%% @doc Default cert location for https can be overridden
-%% with the ssl config variable, for example:
-{mapping, "ssl.certfile", "edfs.ssl.certfile", [
-  {commented, "$(platform_priv_dir)/cert.pem"}
-]}.
-
-%% @doc Default key location for https can be overridden
-%% with the ssl config variable, for example:
-{mapping, "ssl.keyfile", "edfs.ssl.keyfile", [
-  {commented, "$(priv)key.pem"}
-]}.
-
 %% @doc handoff.port is the TCP port that eDFS uses for
 %% intra-cluster data handoff.
 {mapping, "handoff.port", "edfs.handoff_port", [
@@ -159,29 +149,26 @@
 %% @doc if you need a seperate keyfile for handoff
 {mapping, "handoff.ssl.keyfile", "edfs.handoff_ssl_options.keyfile", []}.
 
+
 %% Platform-specific installation paths (substituted by rebar)
 {mapping, "platform_bin_dir", "edfs.platform_bin_dir", [
   {default, "./bin"}
 ]}.
 
 {mapping, "platform_data_dir", "edfs.platform_data_dir", [
-  {default, "./priv/data"}
+  {default, "./data"}
 ]}.
 
 {mapping, "platform_etc_dir", "edfs.platform_etc_dir", [
-  {default, "./priv/etc"}
+  {default, "./etc"}
 ]}.
 
 {mapping, "platform_lib_dir", "edfs.platform_lib_dir", [
-  {default, "./priv/lib"}
+  {default, "./lib"}
 ]}.
 
 {mapping, "platform_log_dir", "edfs.platform_log_dir", [
   {default, "./log"}
-]}.
-
-{mapping, "platform_priv_dir", "edfs.platform_priv_dir", [
-  {default, "./priv"}
 ]}.
 
 %% @doc Size, in bytes, of the in-memory buffer.  When this

@@ -12,9 +12,12 @@
     config_gen/2
 ]).
 
+%% @doc Run this via rebar (rebar config_gen) to generate the .conf files on ./priv
 config_gen(Config, _Reltoolfile) ->
     generate_config_files(Config).
 
+%% @doc Main configuration files generator. Translates the Schema files to .conf
+%% files
 generate_config_files(Config) ->       
     io:format("===> generating eDFS config file ~n", []),
     EDFS_schema_file = rebar_config:get_local(Config, edfs_schema,"edfs.schema"),
@@ -24,18 +27,21 @@ generate_config_files(Config) ->
     io:format("===> generating Erlang VM config file ~n", []),
     EDFS_vmschema_file = rebar_config:get_local(Config, edfs_vmschema, "erlang_vm.schema"),
     EDFS_vmconfig_file = rebar_config:get_local(Config, edfs_vmconf, "erlang_vm.conf"),
-    generate_conf(EDFS_vmschema_file, EDFS_config_file),
+    generate_conf(EDFS_vmschema_file, EDFS_vmconfig_file),
     
     io:format("===> finished generating config files ~n"),
     ok.
     
-%% @doc Generate .conf files form the .schema files        
+%% @doc Generate .conf files form the .schema files
+-spec generate_conf(SchemaFile, ConfigFile) -> error | ok when
+      SchemaFile :: file:filename(),
+      ConfigFile :: file:filename().
 generate_conf(SchemaFile, ConfigFile) ->
     case cuttlefish_schema:files([SchemaFile]) of
         {error, _Es} ->
             %% These errors were already printed
             error;
-        {_Translations, Mappings, _Validators} ->
+        {_Translations, Mappings, _Validators} = _Schema ->
             cuttlefish_conf:generate_file(Mappings, ConfigFile),
             ok
     end.
