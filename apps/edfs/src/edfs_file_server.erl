@@ -125,12 +125,3 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-
-%%%-------------------------------------------------------------------
-%%% @author Mawuli Adzaku <mawuli.ypa@gmail.com>
-%%% @copyright (C) 2014, Mawuli Adzaku
-%%% @doc GenServer module for storing and accessing file data chunks
-%%%
-%%% @end
-%%% Created : 18 Sep 2014 by Mawuli Adzaku <mawuli.ypa@gmail.com>
-%%%-------------------------------------------------------------------

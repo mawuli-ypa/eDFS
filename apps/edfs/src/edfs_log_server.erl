@@ -125,12 +125,3 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-
-%%%-------------------------------------------------------------------
-%%% @author Mawuli Adzaku <mawuli.ypa@gmail.com>
-%%% @copyright (C) 2014, Mawuli Adzaku
-%%% @doc eDFS replicated log server. This is used for repairing nodes (repairing their data to be consistent with the latest master)
-%%% This usually occurs during a partitions or some unknown cause.
-%%% @end
-%%% Created : 18 Sep 2014 by Mawuli Adzaku <mawuli.ypa@gmail.com>
-%%%-------------------------------------------------------------------

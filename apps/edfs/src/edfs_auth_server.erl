@@ -125,13 +125,3 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-
-%%%-------------------------------------------------------------------
-%%% @author Mawuli Adzaku <mawuli.ypa@gmail.com>
-%%% @copyright (C) 2014, Mawuli Adzaku
-%%% @doc Authentication service for eDFS
-%%%
-%%% @end
-%%% Created : 19 Sep 2014 by Mawuli Adzaku <mawuli.ypa@gmail.com>
-%%%-------------------------------------------------------------------
-
