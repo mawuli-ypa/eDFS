@@ -10,7 +10,9 @@
   },
   {applications, [
                   kernel,
-                  stdlib
+                  stdlib,
+                  lager,
+                  ranch
                  ]},
   {mod, { edfs_app, []}},
   {env, []}
