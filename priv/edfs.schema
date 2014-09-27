@@ -1,11 +1,18 @@
-%% @doc Number nodes needed for a read quorom
-{mapping, "read_quota", "edfs.read_quota", [
+%% @doc Number of replicas on distinct nodes
+{mapping, "rfactor", "edfs.rfactor", [
+  {default,  5},
+  {datatype, integer}
+]}.
+
+
+%% @doc Number of replica responses needed for a successful read
+{mapping, "read_quorum", "edfs.read_quorum", [
   {default,  2},
   {datatype, integer}
 ]}.
 
-%% @doc Number nodes needed for a write quorom
-{mapping, "write_quota", "edfs.write_quota", [
+%% @doc Number of replica responses needed for a successful write
+{mapping, "write_quorum", "edfs.write_quorum", [
   {default,  3},
   {datatype, integer}
 ]}.
@@ -124,13 +131,21 @@
   {include_default, "tcp"}
 ]}.
 
-{ translation,
-  "edfs.listener",
-    fun(Conf) ->
-        HTTP = cuttlefish_variable:filter_by_prefix("listener", Conf),
-        [ IP || {_, IP} <- HTTP]
-    end
-}.
+{translation,
+"edfs.listener",
+fun(Conf) ->
+  List1 = lists:filter(
+    fun({Var, _V}) ->
+      cuttlefish_variable:is_fuzzy_match(Var, ["listener","$name"])
+    end,
+    Conf),
+  Listeners = [ begin
+    [_, Name] = NameVariable,
+    {list_to_atom(Name), Address}
+  end || {NameVariable, Address} <- List1]
+
+end}.
+
 
 %% @doc handoff.port is the TCP port that eDFS uses for
 %% intra-cluster data handoff.
@@ -231,36 +246,17 @@
 end}.
 
 
-
-%% web dashboard
-%% @doc Set to false to disable the admin panel.
-{mapping, "admin", "edfs.admin_enabled", [
-  {default, off},
-  {datatype, {enum, [on, off]}}
-]}.
-
-{translation,
- "edfs.admin_enabled",
- fun(Conf) ->
-    Setting = cuttlefish:conf_get("admin", Conf),
-    case Setting of
-      on -> true;
-      off -> false;
-      _Default -> false
-    end
- end}.
-
-%% @doc Authentication style used for access to the admin
-%% panel. Valid styles are: off, userlist
-{mapping, "admin.auth", "edfs.admin_auth", [
+%% @doc Authentication
+%% Valid styles are: off, userlist
+{mapping, "auth", "edfs.auth", [
   {default, userlist},
   {datatype, {enum, [off, userlist]}}
 ]}.
 
 {translation,
-"edfs.admin_auth",
+"edfs.auth",
 fun(Conf) ->
-  case cuttlefish:conf_get("admin.auth", Conf) of
+  case cuttlefish:conf_get("auth", Conf) of
     userlist -> userlist;
     off -> none;
     _ -> none
@@ -270,17 +266,17 @@ end}.
 %% @doc If auth is set to 'userlist' then this is the
 %% list of usernames and passwords for access to the
 %% admin panel.
-{mapping, "admin.user.$username.password", "admin.userlist", [
+{mapping, "auth.user.$username.password", "edfs.userlist", [
   {default, "pass"},
   {include_default, "admin"}
 ]}.
 
 {translation,
-"admin.userlist",
+"edfs.userlist",
 fun(Conf) ->
   UserList1 = lists:filter(
     fun({Var, _V}) ->
-      cuttlefish_variable:is_fuzzy_match(Var, ["admin","user","$username","password"])
+      cuttlefish_variable:is_fuzzy_match(Var, ["auth","user","$username","password"])
     end,
     Conf),
   UserList = [ begin
