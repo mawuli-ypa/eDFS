@@ -10,7 +10,8 @@ endif
 
 # Erlang Rebar downloading
 # see: https://groups.google.com/forum/?fromgroups=#!topic/erlang-programming/U0JJ3SeUv5Y
-REBAR := $(shell (type rebar 2>/dev/null || echo ./rebar) | tail -1 | awk '{ print $$NF }')
+#REBAR := $(shell (type rebar 2>/dev/null || echo ./rebar) | tail -1 | awk '{ print $$NF }')
+REBAR := $(shell echo ./rebar)
 REBAR_DEPS := $(shell which rebar || echo ../../rebar)
 REBAR_URL := https://github.com/rebar/rebar/wiki/rebar
 
@@ -44,14 +45,18 @@ deps:
 	@$(REBAR) get-deps
 	$(REBAR) compile
 
+# generate edfs.conf file from the edfs.schema file
 config_gen:
 	$(REBAR) config_gen
+
+parse_config:
+	$(REBAR) parse_config
 
 update-deps:
 	$(REBAR) update-deps
 	$(RENDER) compile
 
-compile: config_gen
+compile: parse_config
 	$(REBAR) skip_deps=true compile
 
 clean:
@@ -92,7 +97,7 @@ define download_relx
 	chmod +x $(RELX)
 endef
 
-rel: config_gen  clean-rel all $(RELX)
+rel: parse_config  clean-rel all $(RELX)
 	@$(RELX) -c $(RELX_CONFIG) $(RELX_OPTS)
 
 $(RELX):
