@@ -58,7 +58,7 @@ get(Key) ->
             Value
     end.
 
-%% @doc Check's if username and password is in the user list.
+%% @doc Checks if username and password is in the user list.
 -spec is_user_allowed(Username, Password) -> true | false when
       Username :: string(),
       Password :: string().
