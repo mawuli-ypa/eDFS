@@ -12,7 +12,9 @@
 
 -export([gen_chunk_id/0,
          gen_sec_chunk_id/0,
-         priv_dir/0]).
+         priv_dir/0,
+         encode_json/1,
+         decode_json/1]).
 
 %% ====================================================================
 %% API functions
@@ -66,3 +68,13 @@ priv_dir() ->
         PrivDir ->
             PrivDir
     end.
+
+%% @doc Decode the response from the server
+-spec decode_json(JSON :: binary()) -> json().
+decode_json(JSON) ->
+    jiffy:decode(JSON).
+
+%% @doc encode the given data into JSON format
+-spec encode_json(Data :: any()) -> binary().
+encode_json(Data) ->
+    jiffy:encode({Data}).
