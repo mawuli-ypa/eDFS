@@ -32,10 +32,13 @@
 -define(EDFS_MAPREDUCE_SERVER, edfs_map_reduce).
 
 
-% chunk settings
+%% chunk settings
 -define(CHUNK_SIZE, 32*1024*1024). % 32 MB
 -define(OVERHEAD, 5/4).
 
+%% listener options
+-define(EDFS_TCP_LISTENER, edfs_listener).
+-define(EDFS_TCP_ACCEPTORS, 100). 
 
 %% Below is copied (and adapted) from Zotonic, which is copyright Zotonic
 
@@ -45,7 +48,7 @@
 -define(LOG(Msg, Args), error_logger:info_msg(Msg, Args)).
 -define(ERROR(Msg, Args), error_logger:error_msg("~p:~p "++Msg, [?MODULE, ?LINE|Args])).
 
--define(STDOUT(Str, Args), io:format(Str ++ "~n", Args)).
+-define(STDOUT(Str, Args), io:format("==> " ++ Str ++ "~n", Args)).
 -define(FORMAT(Str, Args), io_lib:format(Str, Args)).
 
 -define(STACKTRACE, erlang:display(try throw(a) of _ -> a catch _:_ -> erlang:get_stacktrace() end)).
@@ -71,6 +74,8 @@
 -type filetype() :: regular | directory.
 -type chunkid()  :: integer().
 -type cluster()  :: undefined | uuid().
+-type json() :: tuple().
+
 %% file permission
 %%  r - read, w - write, x - execute (allowed to run operations/plugins on this file)
 -type permission() :: r | w | x.
@@ -129,3 +134,15 @@
           port       :: undefined | integer(),
           space_util = 0
          }).
+
+%% request object
+-record(edfs_request, {
+          n         :: integer(), %% number replicas to store on distinct nodes
+          r         :: integer(), %% number of reads needed for a succesful read
+          w         :: integer(), %% number of writes needed for a successful write
+          username  :: undefined | string(),
+          password  :: undefined | string(),
+          metadata  :: proplists(),
+          payload   :: undefined | string(),
+          command   :: undefined | string()
+}).
