@@ -126,8 +126,8 @@
 %% @doc listener.<name> is an IP address and TCP port that the eDFS will bind to
 %% This <name> can be either tcp, ssl
 {mapping, "listener.$name", "edfs.listener", [
-  {default, {"127.0.0.1",8098}},
-  {datatype, ip},
+  {default, "random"},
+  {datatype, [ip, {atom, random}]},
   {include_default, "tcp"}
 ]}.
 
