@@ -1,0 +1,16 @@
+language: erlang
+otp_release:
+  - 17.1
+  - 17.0
+  - R16B
+script: make tests
+branches:
+  only:
+    - master
+notifications:
+  email:
+    recipients:
+      - mawuli.ypa@gmail.com
+      - mangalaman93@gmail.com
+    on_success: change #[always|never|change] # default: change
+    on_failure: always #[always|never|change] # default: always
