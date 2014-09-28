@@ -135,7 +135,7 @@
           space_util = 0
          }).
 
-%% request object
+%% edfs request object. All client request to server should be JSON equivalent of this
 -record(edfs_request, {
           n         :: integer(), %% number replicas to store on distinct nodes
           r         :: integer(), %% number of reads needed for a succesful read
@@ -145,4 +145,12 @@
           metadata  :: proplists(),
           payload   :: undefined | string(),
           command   :: undefined | string()
+}).
+
+%% edfs response object
+-record(edfs_response, {
+          respone_code   :: integer(),
+          response_text  :: string(),
+          data           :: any(),
+          metadata       :: proplists()
 }).
