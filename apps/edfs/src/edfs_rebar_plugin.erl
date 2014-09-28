@@ -21,7 +21,7 @@ parse_config(Config, _Reltoolfile) ->
     Conf = cuttlefish_conf:files([ConfigFile]),
 
     %% now parse the conf file
-    NewConfig = case cuttlefish_generator:map(Schema, Conf) of
+    FinalConfig = case cuttlefish_generator:map(Schema, Conf) of
         {error, Phase, {error, Errors}} ->
             lager:error("Error generating configuration in phase ~s", [Phase]),
             _ = [ cuttlefish_error:print(E) || E <- Errors],
@@ -29,10 +29,15 @@ parse_config(Config, _Reltoolfile) ->
         ValidConfig -> ValidConfig
     end,
 
+    FinalAppConfig = proplists:delete(vm_args, FinalConfig),
+    FinalVMArgs = cuttlefish_vmargs:stringify(proplists:get_value(vm_args, FinalConfig)),
+
     Destination  = rebar_config:get_local(Config, edfs_app_configpath,"edfs.sys.config"),
-    case file:write_file(Destination, io_lib:fwrite("~p.\n", [NewConfig])) of
-        ok ->
-            io:format("==> sys config written to ~p ~n", [Destination]);
+    DestinationVMArgs  = rebar_config:get_local(Config, edfs_vmargs_path,"edfs.vm.args"),
+    case { file:write_file(Destination, io_lib:fwrite("~p.\n", [FinalAppConfig])),
+           file:write_file(DestinationVMArgs, string:join(FinalVMArgs, "\n"))} of
+        {ok, ok} ->
+            io:format("==> sys config and vm agrs written to ~p, ~p ~n", [Destination, DestinationVMArgs]);
         Error ->
             io:format("==> Could not parse configuration file: ~p ~n", [Error]),
             ok
@@ -49,11 +54,6 @@ generate_config_files(Config) ->
     EDFS_schema_file = rebar_config:get_local(Config, edfs_schema,"edfs.schema"),
     EDFS_config_file = rebar_config:get_local(Config, edfs_conf, "edfs.conf"),
     generate_conf(EDFS_schema_file, EDFS_config_file),
-
-    io:format("==> generating Erlang VM config file ~n", []),
-    EDFS_vmschema_file = rebar_config:get_local(Config, edfs_vmschema, "erlang_vm.schema"),
-    EDFS_vmconfig_file = rebar_config:get_local(Config, edfs_vmconf, "erlang_vm.conf"),
-    generate_conf(EDFS_vmschema_file, EDFS_vmconfig_file),
     
     io:format("==> finished generating config files ~n", []),
     ok.
