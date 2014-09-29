@@ -64,7 +64,8 @@
 -define(EDFS_VMSCHEMA_FILE, "erlang_vm.schema").
 -define(EDFS_VMCONFIG_FILE, "erlang_vm.args").
 
-
+%% default ring size. set to 2^160
+-define(EDFS_RING_SIZE, trunc(math:pow(2,160)-1)).
 
 %%% DATA TYPES
 -type(proplists() :: [term()]).

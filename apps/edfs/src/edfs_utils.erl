@@ -40,25 +40,6 @@ gen_chunk_id(Len, Num, Acc) ->
 gen_sec_chunk_id() ->
     gen_chunk_id(48, curr_time_millis(), gen_rand_str(8)).
 
-
-%% ====================================================================
-%% Internal functions
-%% ====================================================================
-
-% @doc Generate random strings of given length
-gen_rand_str(Len) ->
-    gen_rand_str(Len, []).
-gen_rand_str(0, Acc) ->
-    Acc;
-gen_rand_str(Len, Acc) ->
-    Char = lists:nth(random:uniform(?LEN_AC), ?ALLOWED_CHARS),
-    gen_rand_str(Len-1, [Char|Acc]).
-
-% @doc Returns time in millisec
-curr_time_millis() ->
-    {MegaSec, Sec, MicroSec} = erlang:now(),
-    1000000000000*MegaSec + Sec*1000000 + MicroSec.
-
 %% @doc Returns path to priv_dir
 priv_dir() ->
     case code:priv_dir(?MODULE) of
@@ -78,3 +59,34 @@ decode_json(JSON) ->
 -spec encode_json(Data :: any()) -> binary().
 encode_json(Data) ->
     jiffy:encode({Data}).
+
+
+%% @doc Returns the hash value of the data
+-spec data2node(Data, Hash, Ring) -> Node when
+      Data :: any(),
+      Hash :: chashbin:chasbin(),
+      Ring :: chas:chas(),
+      Node :: atom().
+data2node(Data, Hash, Ring) ->
+    SHA1 = chash:key_of(Data),
+    Index = chashbin:responsible_index(SHA1, Hash),
+    Node = chash:lookup(Index, Ring),
+    Node.
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+% @doc Generate random strings of given length
+gen_rand_str(Len) ->
+    gen_rand_str(Len, []).
+gen_rand_str(0, Acc) ->
+    Acc;
+gen_rand_str(Len, Acc) ->
+    Char = lists:nth(random:uniform(?LEN_AC), ?ALLOWED_CHARS),
+    gen_rand_str(Len-1, [Char|Acc]).
+
+% @doc Returns time in millisec
+curr_time_millis() ->
+    {MegaSec, Sec, MicroSec} = erlang:now(),
+    1000000000000*MegaSec + Sec*1000000 + MicroSec.
