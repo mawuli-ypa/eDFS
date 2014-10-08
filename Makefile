@@ -22,7 +22,7 @@ REBAR_URL := https://github.com/rebar/rebar/wiki/rebar
 	chmod +x ./rebar
 
 # relx
-RELX ?= $(CURDIR)/relx
+RELX ?= $(shell (type relx 2>/dev/null || echo ./relx) | tail -1 | awk '{ print $$NF }')
 RELX_CONFIG ?= $(CURDIR)/relx.config
 RELX_URL ?= https://github.com/erlware/relx/releases/download/v0.6.0/relx
 RELX_OPTS ?=
@@ -46,7 +46,7 @@ deps:
 	$(REBAR) compile
 
 # generate edfs.conf file from the edfs.schema file
-config_gen:
+config_gen: deps
 	$(REBAR) config_gen
 
 parse_config:
